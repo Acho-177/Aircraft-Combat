@@ -456,7 +456,7 @@ def game_over():
     # draw game over
     gameOverFont = pygame.font.Font('freesansbold.ttf', 100)
     gameSurf = gameOverFont.render('Game', True, WHITE)
-    overSurf = gameOverFont.render('Over', True, WHITE)z
+    overSurf = gameOverFont.render('Over', True, WHITE)
     gameRect = gameSurf.get_rect()
     overRect = overSurf.get_rect()
     gameRect.midtop = (WIDTH / 2, 10)
