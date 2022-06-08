@@ -347,11 +347,14 @@ def game_start():
     startImage = startFont.render("Start", True, WHITE)
     screen.blit(startImage, (start_x, start_y + 0 * gap))
 
-    startImage = startFont.render("Setting", True, WHITE)
+    startImage = startFont.render("Shop", True, WHITE)
     screen.blit(startImage, (start_x, start_y + 1 * gap))
 
-    startImage = startFont.render("Exit", True, WHITE)
+    startImage = startFont.render("Setting", True, WHITE)
     screen.blit(startImage, (start_x, start_y + 2 * gap))
+
+    startImage = startFont.render("Exit", True, WHITE)
+    screen.blit(startImage, (start_x, start_y + 3 * gap))
 
     pygame.display.update()
     pygame.event.clear()
@@ -361,25 +364,69 @@ def game_start():
 
         loc = check_click()
         if loc is not None:
-            if loc[0] in range(start_x, start_x + length) and loc[1] in range(400, 450):  # start
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(400, 470):  # start
                 return
-            if loc[0] in range(start_x, start_x + length) and loc[1] in range(480, 550):  # setting
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(480, 550):  # shop
+                show_shop()
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(560, 620):  # setting
                 player_setting()
                 game_start()
-            if loc[0] in range(start_x, start_x + length) and loc[1] in range(560, 650):  # exit
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(640, 720):  # exit
                 terminate()
+
+
+# shop
+def show_shop():
+    screen.blit(bg_img, (0, 0))
+
+    start_x = 200
+    start_y = 400
+    gap = 100
+    length = 200
+
+    startFont = pygame.font.Font(None, 80)
+
+    startImage = startFont.render("EMPTY NOW", True, WHITE)
+    screen.blit(startImage, (800, 500))
+
+    total_score = get_score()
+
+    hpFont = pygame.font.Font(None, 80)
+    hpImage = hpFont.render("   Score: " + str(int(total_score)), True, WHITE)
+    screen.blit(hpImage, (100, 100))
+
+    pygame.display.update()
+    pygame.event.clear()
+
+    while True:
+        if check_quit():
+            terminate()
+
+        if check_esc():
+            main()
+
+        loc = check_click()
+        if loc is not None:
+            pass
 
 
 # player setting (level up)
 def player_setting():
 
     screen.blit(bg_img, (0, 0))
+
     myFont = pygame.font.Font(None, 80)
+
+    start_x = 200
+    start_y = 400
+    gap = 100
+    length = 200
+
     loadImage = myFont.render("Load", True, WHITE)
-    screen.blit(loadImage, (200, 400))
+    screen.blit(loadImage, (start_x, start_y + 0 * gap))
 
     loadImage = myFont.render("Back", True, WHITE)
-    screen.blit(loadImage, (200, 500))
+    screen.blit(loadImage, (start_x, start_y + 1 * gap))
 
     pygame.display.update()
     pygame.event.clear()
@@ -390,10 +437,10 @@ def player_setting():
 
         loc = check_click()
         if loc is not None:
-            if loc[0] in range(200, 400) and loc[1] in range(400, 500):  # loading player
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(400, 500):  # loading player
                 load()
                 return
-            if loc[0] in range(200, 400) and loc[1] in range(500, 600):  # back
+            if loc[0] in range(start_x, start_x + length) and loc[1] in range(500, 600):  # back
                 return
 
 
@@ -409,7 +456,7 @@ def game_over():
     # draw game over
     gameOverFont = pygame.font.Font('freesansbold.ttf', 100)
     gameSurf = gameOverFont.render('Game', True, WHITE)
-    overSurf = gameOverFont.render('Over', True, WHITE)
+    overSurf = gameOverFont.render('Over', True, WHITE)z
     gameRect = gameSurf.get_rect()
     overRect = overSurf.get_rect()
     gameRect.midtop = (WIDTH / 2, 10)
@@ -482,7 +529,7 @@ def pause():
 
 # close the game
 def terminate():
-    save()
+    #save()
     pygame.quit()
     sys.exit()
 
@@ -667,6 +714,16 @@ def load(filename="data.txt"):
     player.hp = int(data[0])
     player.load_full = int(data[1])
     player.fuel_full = int(data[2])
+
+
+def get_score(filename="data.txt"):
+
+    with open(filename, "r") as file:
+        data = file.readlines()
+    for line in data:
+        line = int(line.strip('\n'))
+
+    return data[4]
 
 
 def save(filename="data.txt"):
