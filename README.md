@@ -1,2 +1,2 @@
 # Aircraft-Combat
-Game making practice based on Pygame
+Game developing practice based on Pygame
