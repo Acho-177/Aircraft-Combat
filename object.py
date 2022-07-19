@@ -1,73 +1,21 @@
 import pygame
 import os
 import random
-
-WIDTH = 1920  # 游戏窗口的宽度
-HEIGHT = 1200  # 游戏窗口的高度
-FPS = 1000  # 帧率
-
-# Colors (R, G, B)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 215, 0)
-
-# player & enemy image resource
-
-game_folder = os.path.dirname(__file__)
-
-img_folder = os.path.join(game_folder, 'img')
-
-player_img = pygame.image.load(os.path.join(img_folder, 'player1.png'))
-player_img = pygame.transform.rotozoom(player_img, 0, 0.1)
-
-enemy_img = pygame.image.load(os.path.join(img_folder, 'enemy.png'))
-enemy_img = pygame.transform.rotozoom(enemy_img, 135, 0.1)
-
-bullet_img = pygame.image.load(os.path.join(img_folder, 'bullet2.png'))
-bullet_img = pygame.transform.rotozoom(bullet_img, 0, 0.08)
-
-enemy_bullet_img = pygame.image.load(os.path.join(img_folder, 'bullet1.png'))
-enemy_bullet_img = pygame.transform.rotozoom(enemy_bullet_img, 0, 0.2)
-
-boss_img = pygame.image.load(os.path.join(img_folder, 'boss.png'))
-boss_img = pygame.transform.rotozoom(boss_img, 0, 1)
-
-
-# prop image resource
-amo_img = pygame.image.load(os.path.join(img_folder, 'amo.png'))
-amo_img = pygame.transform.rotozoom(amo_img, 0, 0.1)
-
-hp_img = pygame.image.load(os.path.join(img_folder, 'hp.png'))
-hp_img = pygame.transform.rotozoom(hp_img, 0, 0.15)
-
-fuel_img = pygame.image.load(os.path.join(img_folder, 'fuel.png'))
-fuel_img = pygame.transform.rotozoom(fuel_img, 0, 0.15)
-
-Event_img = dict()
-Event_img[1] = hp_img
-Event_img[2] = amo_img
-Event_img[3] = fuel_img
-
-# video resource
-
-video_folder = os.path.join(game_folder, 'video')
-first_video = os.path.join(video_folder, 'Apex Legends.mp4')
+from resource import *
 
 # object class
 
 
 class Player(pygame.sprite.Sprite):
     # sprite for the Player
-    def __init__(self, img=player_img, hp=10, speed=2, load=1000, fuel=5000):
+    # default construction: img=player_img, hp=10, speed=2, load=1000, fuel=5000, speed_limit=5
+    def __init__(self, img=player_img, hp=10, speed=2, load=1000, fuel=5000, speed_limit=5):
         # this line is required to properly create the sprite
         pygame.sprite.Sprite.__init__(self)
 
         # create a plain rectangle for the sprite image
         self.image = img
-        self.image.set_colorkey(BLACK)
+        #self.image.set_colorkey(BLACK)
 
         # find the rectangle that encloses the image
         self.rect = self.image.get_rect()
@@ -76,8 +24,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (self.rect.width / 2, HEIGHT / 2)
 
         # player's speed
+        self.default_speed = speed
+        self.speed_limit = speed_limit
         self.speed = speed
-        self.speed_limit = speed * 2
 
         # amo
         self.gun_pos = None
@@ -109,9 +58,9 @@ class Player(pygame.sprite.Sprite):
         # any code here will happen every time the game loop updates
         # self.rect.x += 1
 
-        x = self.rect.x + 138
-        y = self.rect.y + 62
-        self.gun_pos = (x, y)
+        gun_x = self.rect.x + 138
+        gun_y = self.rect.y + 62
+        self.gun_pos = (gun_x, gun_y)
 
         if self.bullets is not None:
             for bullet in self.bullets:
@@ -127,7 +76,7 @@ class Player(pygame.sprite.Sprite):
             self.fuel -= 1
             self.speed = self.speed_limit
         else:
-            self.speed = int(self.speed_limit / 2)
+            self.speed = self.default_speed
 
     def jump(self):
         self.speed_up = False if self.speed_up else True
@@ -154,13 +103,14 @@ class Player(pygame.sprite.Sprite):
 
 class Enemy(pygame.sprite.Sprite):
     # sprite for the Player
+    # default construction: image=enemy_img, speed=2, hp=1
     def __init__(self, image=enemy_img, speed=2, hp=1):
         # this line is required to properly create the sprite
         pygame.sprite.Sprite.__init__(self)
 
         # create a plain rectangle for the sprite image
         self.image = image
-        self.image.set_colorkey(BLACK)
+        #self.image.set_colorkey(BLACK)
 
         # find the rectangle that encloses the image
         self.rect = self.image.get_rect()
@@ -217,7 +167,7 @@ class Boss(pygame.sprite.Sprite):
 
         # create a plain rectangle for the sprite image
         self.image = image
-        self.image.set_colorkey(BLACK)
+        #self.image.set_colorkey(BLACK)
 
         # find the rectangle that encloses the image
         self.rect = self.image.get_rect()
@@ -243,9 +193,9 @@ class Boss(pygame.sprite.Sprite):
         self.lifebar = Lifebar(self)
 
     def update(self):
-        x = self.rect.x + 15
-        y = self.rect.y + 235
-        self.gun_pos = (x, y)
+        gun_x = self.rect.x + 15
+        gun_y = self.rect.y + 235
+        self.gun_pos = (gun_x, gun_y)
 
         self.ai_movement()
         if self.bullets is not None:
@@ -267,14 +217,12 @@ class Boss(pygame.sprite.Sprite):
             else:
                 self.rect.y = 0
 
-
         if x < 20:
             bullet = Bullet(self, -1)
             self.bullets.add(bullet)
 
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))
-
         self.lifebar.paint(surface)
 
 
@@ -289,7 +237,7 @@ class Bullet(pygame.sprite.Sprite):
             self.image = bullet_img
         else:
             self.image = enemy_bullet_img
-        self.image.set_colorkey(BLACK)
+        #self.image.set_colorkey(BLACK)
 
         # find the rectangle that encloses the image
         self.rect = self.image.get_rect()

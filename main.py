@@ -5,33 +5,8 @@ import sys
 
 from pygame import KEYDOWN, K_SPACE, K_a, KEYUP, QUIT, K_ESCAPE
 
-
+from resource import *
 from object import *
-
-
-WIDTH = 1920  # 游戏窗口的宽度
-HEIGHT = 1200 # 游戏窗口的高度
-FPS = 144 # 帧率
-
-# Colors (R, G, B)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (144, 238, 144)
-BLUE = (0, 0, 255)
-YELLOW = (255, 215, 0)
-GREY = (28, 28, 28)
-
-# resource
-game_folder = os.path.dirname(__file__)
-img_folder = os.path.join(game_folder, 'img')
-bg_img = pygame.image.load(os.path.join(img_folder, 'bg.jpg'))
-bg_img = pygame.transform.scale(bg_img, (1920, 1200))
-
-hpBar_img = pygame.image.load(os.path.join(img_folder, 'bar1.png'))
-hpBar_img = pygame.transform.rotozoom(hpBar_img, 0, 0.8)
-
-music_folder = os.path.join(game_folder, 'music')
 
 count = 0
 BOSS = False
@@ -40,14 +15,6 @@ boss_gap = 3000
 start = time.time()
 score = 0
 
-# game setting
-winPoint = 25
-NormalEnemyCreatePossibility = 3
-NormalPropCreatePossibility = 1
-prop_hp = 2
-prop_load = 20
-prop_fuel = 500
-
 # initialize game
 pygame.init()
 pygame.mixer.init()  # 声音初始化
@@ -55,7 +22,6 @@ pygame.mixer.init()  # 声音初始化
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("1")
 clock = pygame.time.Clock()
-
 
 # initialize player and other groups
 player = Player()
@@ -434,6 +400,9 @@ def player_setting():
     while True:
         if check_quit():
             terminate()
+
+        if check_esc():
+            main()
 
         loc = check_click()
         if loc is not None:
