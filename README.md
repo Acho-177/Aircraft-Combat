@@ -3,7 +3,7 @@ Game developing practice based on Pygame
 
 ***
 
-2022-10-12
+<h1>2022-10-12</h1>
 
 
 <p><em>Reconstructing the structure of the whole project, importing a new designing mode<em></p>
