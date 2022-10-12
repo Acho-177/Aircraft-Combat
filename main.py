@@ -282,7 +282,7 @@ def getAllBullets():
 def game_start():
 
     # play start bgm
-    pygame.mixer.music.load(os.path.join(music_folder, 'start_music.mp3'))
+    pygame.mixer.music.load(os.path.join(music_folder, 'bg_music.mp3'))
     pygame.mixer.music.play()
     pygame.mixer.music.set_volume(0.2)
 
