@@ -10,3 +10,4 @@ Game developing practice based on Pygame
    <li>  finish game_start </li>
    <li>  shop page currently empty, coming soon  </li>
    <li>  next step: game_run </li>
+   <li>  alert: previous python file will be deleted after the reconstruction process </li>
